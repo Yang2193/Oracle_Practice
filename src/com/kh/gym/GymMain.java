@@ -2,6 +2,7 @@ package com.kh.gym;
 
 import com.kh.gym.dao.MemberInfoDAO;
 import com.kh.gym.method.Member;
+import com.kh.gym.method.Product;
 
 import java.util.Scanner;
 
@@ -9,7 +10,7 @@ public class GymMain {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Member member = new Member();
-        MemberInfoDAO memberInfoDAO = new MemberInfoDAO();
+        Product product = new Product();
         while(true){
             System.out.println("===== GYM MANAGEMENT PROGRAM =====");
             System.out.println("메뉴를 선택하세요. ");
@@ -18,10 +19,12 @@ public class GymMain {
             switch(sel){
                 case 1: member.management();
                         break;
-                case 2: break;
+                case 2:
+                        break;
                 case 3: break;
                 case 4: break;
-                case 5: break;
+                case 5: product.product();
+                        break;
                 case 6: System.out.println("헬스장 관리 프로그램을 종료합니다."); return;
             }
         }
