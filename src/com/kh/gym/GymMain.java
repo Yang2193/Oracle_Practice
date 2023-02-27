@@ -3,6 +3,7 @@ package com.kh.gym;
 import com.kh.gym.dao.MemberInfoDAO;
 import com.kh.gym.method.Member;
 import com.kh.gym.method.Product;
+import com.kh.gym.method.Sales;
 
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ public class GymMain {
         Scanner sc = new Scanner(System.in);
         Member member = new Member();
         Product product = new Product();
+        Sales sales = new Sales();
         while(true){
             System.out.println("===== GYM MANAGEMENT PROGRAM =====");
             System.out.println("메뉴를 선택하세요. ");
@@ -19,7 +21,7 @@ public class GymMain {
             switch(sel){
                 case 1: member.management();
                         break;
-                case 2:
+                case 2: sales.sales();
                         break;
                 case 3: break;
                 case 4: break;
