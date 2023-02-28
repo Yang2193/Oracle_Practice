@@ -25,13 +25,6 @@ public class MemberInfoVO {
         this.reg_Date = reg_Date;
     }
 
-    public MemberInfoVO(int mem_Id, String mname, String pname, Date due_date, String phoneNum){
-        this.mem_Id = mem_Id;
-        this.mname = mname;
-        this.pname = pname;
-        this.due_Date = due_date;
-        this.phoneNum = phoneNum;
-    }
 
     public int getMem_Id() {
         return mem_Id;
