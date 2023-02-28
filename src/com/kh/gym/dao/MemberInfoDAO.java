@@ -343,6 +343,47 @@ public class MemberInfoDAO {
         else  System.out.println("라커번호 : " + vo.getLockNum());
         System.out.println("등록일 : " + vo.getReg_Date());
     }
+
+    public List<MemberInfoVO> expiredDateList(){
+        List<MemberInfoVO> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM MEMBERINFO WHERE SYSDATE-DUE_DATE > 0";
+        try{
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            rs = pStmt.executeQuery();
+            while(rs.next()){
+                int id = rs.getInt("MEM_ID");
+                String mName = rs.getString("MNAME");
+                String pName = rs.getString("PNAME");
+                int ptRemain = rs.getInt("PT_REMAIN");
+                Date dDate = rs.getDate("DUE_DATE");
+                String gender = rs.getString("GENDER");
+                String pNum = rs.getString("PHONE_NUM");
+                String lNum = rs.getString("LOCKER");
+                Date rDate = rs.getDate("REG_DATE");
+                MemberInfoVO vo = new MemberInfoVO(id, mName,pName,ptRemain,dDate,gender,pNum,lNum,rDate);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(pStmt);
+            Common.close(conn);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void expiredListShow(List<MemberInfoVO> list){
+        for(MemberInfoVO e : list){
+            System.out.println("회원번호 : " + e.getMem_Id());
+            System.out.println("회원성함 : " + e.getMname());
+            System.out.println("이용 중인 상품 : " + e.getPname());
+            System.out.println("만료일 : " + e.getDue_Date());
+            System.out.println("전화번호 : " + e.getPhoneNum());
+            System.out.println("==============");
+        }
+    }
 }
 
 

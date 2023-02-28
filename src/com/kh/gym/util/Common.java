@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class Common {
     final static String ORACLE_URL = "jdbc:oracle:thin:@localhost:1521:xe";
-    final static String ORACLE_ID = "SAMPLEH";
+    final static String ORACLE_ID = "SAMPLEH"; // SCOTT 계정 사용시 바꿔줘야 합니다.
     final static String ORACLE_PWD = "1234";
     final static String ORACLE_DRV = "oracle.jdbc.driver.OracleDriver";
     public static Connection getConnection() {
@@ -27,7 +27,6 @@ public class Common {
         try{
             if(conn != null && !conn.isClosed()){
                 conn.close();
-                System.out.println("Connection 해제 성공");
             } }catch(Exception e){
             e.printStackTrace();
         }
@@ -37,7 +36,6 @@ public class Common {
         try{
             if(stmt != null && !stmt.isClosed()){
                 stmt.close();
-                System.out.println("Connection 해제 성공");
             } }catch(Exception e){
             e.printStackTrace();
         }
@@ -48,7 +46,6 @@ public class Common {
         try{
             if(rset != null && !rset.isClosed()){
                 rset.close();
-                System.out.println("Connection 해제 성공");
             } }catch(Exception e){
             e.printStackTrace();
         }
