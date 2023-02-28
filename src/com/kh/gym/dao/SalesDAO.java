@@ -142,7 +142,11 @@ public class SalesDAO {
     }
 
     public void salesUpdate() {
-        System.out.print("변경할 사원의 이름을 입력 하세요 : ");
+        System.out.print("수정할 주문번호를 입력 하세요 : ");
+        int order_no = sc.nextInt();
+        System.out.print("회원번호 : ");
+        int no = sc.nextInt();
+        System.out.print("회원이름 : ");
         String name = sc.next();
         System.out.print("상품이름 : ");
         String purchase = sc.next();
@@ -152,10 +156,12 @@ public class SalesDAO {
         String pDate = sc.next();
 
         String query = "UPDATE SALES_STATEMENT "
-                + "SET PURCHASE = " + "'" + purchase + "', "
-                + "SALES = " + sales + ", "
-                + "P_DATE = " + "'" + pDate + "', "
-                + "WHERE MNAME = " + "'" + name + "'";
+                + "SET MEM_ID = " + no + ","
+                + "MNAME = " + "'" + name + "'" + ","
+                + "PURCHASE = " + "'" + purchase + "'" + ","
+                + "SALES = " + sales + ","
+                + "P_DATE = " + "'" + pDate + "'"
+                + "WHERE ORDER_NO = " + order_no ;
         try {
             conn = Common.getConnection();
             stmt = conn.createStatement();
