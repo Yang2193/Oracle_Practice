@@ -28,16 +28,25 @@ public class Sales {
                             dao.dailySalSelPrint(list1);
                             break;
                         case 2:
+                            List<SalesVO> list2 = dao.somDaySalSel();
+                            dao.SalSelPrint(list2);
+                            break;
                         case 3:
-                            List<SalesVO> list2 = dao.monthlySalSel();
-                            dao.monthlySalSelPrint(list2);
+                            List<SalesVO> list3 = dao.monthlySalSel();
+                            dao.monthlySalSelPrint(list3);
                             break;
                         case 4:
+                            List<SalesVO> list4 = dao.somMonthSalSel();
+                            dao.SalSelPrint(list4);
+                            break;
                         case 5:
-                            List<SalesVO> list3 = dao.annualSalSel();
-                            dao.annualSalSelPrint(list3);
+                            List<SalesVO> list5 = dao.annualSalSel();
+                            dao.annualSalSelPrint(list5);
                             break;
                         case 6:
+                            List<SalesVO> list6 = dao.somYearSalSel();
+                            dao.SalSelPrint(list6);
+                            break;
                     }
                     break;
                 case 2:
