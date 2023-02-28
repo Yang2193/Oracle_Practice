@@ -21,14 +21,14 @@ public class SalesDAO {
         try {
             conn = Common.getConnection();
             stmt = conn.createStatement();
-            String sql = "SELECT SUM(SALES), P_DATE FROM SALES_STATEMENT GROUP BY P_DATE ORDER BY P_DATE";
+            String sql = "SELECT SUM(SALES), TO_CHAR(P_DATE,'YYYY-MM-DD') FROM SALES_STATEMENT GROUP BY TO_CHAR(P_DATE,'YYYY-MM-DD') ORDER BY TO_CHAR(P_DATE,'YYYY-MM-DD')";
             rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Date pDate = rs.getDate("P_DATE");
+                String pDateStr = rs.getString("TO_CHAR(P_DATE,'YYYY-MM-DD')");
                 int sumSales = rs.getInt("SUM(SALES)");
                 SalesVO vo = new SalesVO();
-                vo.setP_Date(pDate);
+                vo.setP_DateStr(pDateStr);
                 vo.setSales(sumSales);
                 list.add(vo);
             }
@@ -43,7 +43,7 @@ public class SalesDAO {
 
     public void dailySalSelPrint(List<SalesVO> list) {
         for (SalesVO e : list) {
-            System.out.println("일 : " + e.getP_Date());
+            System.out.println("일 : " + e.getP_DateStr());
             System.out.println("매출 : " + e.getSales());
             System.out.println("--------------------------------------");
         }
