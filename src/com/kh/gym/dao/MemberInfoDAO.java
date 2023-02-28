@@ -3,10 +3,7 @@ package com.kh.gym.dao;
 import com.kh.gym.util.Common;
 import com.kh.gym.vo.MemberInfoVO;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +14,8 @@ public class MemberInfoDAO {
 
     Connection conn = null; // 자바와 오라클에 대한 연결 설정
     Statement stmt = null;  // SQL 문을 수행하기 위한 객체
+    PreparedStatement pStmt = null;
+
     ResultSet rs = null; // statement 동작에 대한 결과로 전달되는 DB의 내용
 
 
@@ -67,15 +66,17 @@ public class MemberInfoDAO {
     }
 
     //특정 회원 조회 쿼리
-    public List<MemberInfoVO> M_SelectSomeone() {
+/*    public List<MemberInfoVO> M_SelectSomeone() {
         List<MemberInfoVO> list = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
+        System.out.print("조회하실 회원의 회원번호를 입력하세요. : ");
+        int num = sc.nextInt();
+
+
         try {
             conn = Common.getConnection();
             stmt = conn.createStatement();
-            System.out.print("조회하실 회원의 회원번호를 입력하세요. : ");
-            int num = sc.nextInt();
-            String sql = "SELECT * FROM MEMBERINFO WHERE MEM_ID = " + num;
+            String sql = "SELECT * FROM MEMBERINFO WHERE MEM_ID =" + num;
             rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
@@ -115,7 +116,7 @@ public class MemberInfoDAO {
             System.out.println("등록일 : " + e.getReg_Date());
             System.out.println("===============");
         }
-    }
+    }*/
 
     public void M_InfoInsert() {
         Scanner sc = new Scanner(System.in);
@@ -129,8 +130,8 @@ public class MemberInfoDAO {
         String pName = sc.nextLine();
 
         System.out.print("PT 남은 횟수 : ");
-        String pt_Remain = sc.next();
-        if (pt_Remain.equals("0")) pt_Remain = "";
+        int pt_Remain = sc.nextInt();
+       // if (pt_Remain.equals("0")) pt_Remain = "";
         System.out.print("성별 : ");
         String gender = sc.next();
         System.out.print("전화번호 : ");
@@ -159,19 +160,32 @@ public class MemberInfoDAO {
         Date dDate = Date.valueOf(sdf.format(cal.getTime()));
 
 
-        String sql = "INSERT INTO MEMBERINFO VALUES(" +
-                mem_Id + "," + "'" + name + "'" + "," + "'" + pName + "'" + "," + "'" + pt_Remain + "'" + ","
-                + "'" + dDate + "'" + "," + "'" + gender + "'" + "," + "'" + pNum + "'" + "," +
-                "'" + lockNum + "'" + "," + "'" + rDate + "'" + ")";
+//        String sql = "INSERT INTO MEMBERINFO VALUES(" +
+//                mem_Id + "," + "'" + name + "'" + "," + "'" + pName + "'" + "," + "'" + pt_Remain + "'" + ","
+//                + "'" + dDate + "'" + "," + "'" + gender + "'" + "," + "'" + pNum + "'" + "," +
+//                "'" + lockNum + "'" + "," + "'" + rDate + "'" + ")";
+        String sql = "INSERT INTO MEMBERINFO VALUES(?,?,?,?,?,?,?,?,?)";
+
         try {
             conn = Common.getConnection();
-            stmt = conn.createStatement();
-            int ret = stmt.executeUpdate(sql);
-            System.out.println("Return : " + ret);
+          //  stmt = conn.createStatement();
+          //    int ret = stmt.executeUpdate(sql);
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setInt(1, mem_Id);
+            pStmt.setString(2, name);
+            pStmt.setString(3, pName);
+            pStmt.setInt(4, pt_Remain);
+            pStmt.setDate(5, dDate);
+            pStmt.setString(6, gender);
+            pStmt.setString(7, pNum);
+            pStmt.setString(8, lockNum);
+            pStmt.setString(9, rDate);
+            pStmt.executeUpdate();
+           // System.out.println("Return : " + ret);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Common.close(stmt);
+        Common.close(pStmt);
         Common.close(conn);
 
     }
@@ -280,4 +294,55 @@ public class MemberInfoDAO {
         Common.close(stmt);
         Common.close(conn);
     }
+
+    // 특정회원조회
+    public MemberInfoVO selSomeone(){
+        Scanner sc = new Scanner(System.in);
+        MemberInfoVO vo = null;
+        System.out.print("조회하실 회원의 회원번호를 입력하세요. : ");
+        int num = sc.nextInt();
+        String sql = "SELECT * FROM MEMBERINFO WHERE MEM_ID = ?";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setInt(1, num);
+            rs = pStmt.executeQuery();
+            while(rs.next()){
+                int id = rs.getInt("MEM_ID");
+                String mName = rs.getString("MNAME");
+                String pName = rs.getString("PNAME");
+                int ptRemain = rs.getInt("PT_REMAIN");
+                Date dDate = rs.getDate("DUE_DATE");
+                String gender = rs.getString("GENDER");
+                String pNum = rs.getString("PHONE_NUM");
+                String lNum = rs.getString("LOCKER");
+                Date rDate = rs.getDate("REG_DATE");
+                vo = new MemberInfoVO(id, mName,pName,ptRemain,dDate,gender,pNum,lNum,rDate);
+            }
+
+            Common.close(rs);
+            Common.close(pStmt);
+            Common.close(conn);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return vo;
+    }
+    public void selSomeoneInfo(MemberInfoVO vo){
+        System.out.println("회원번호 : " + vo.getMem_Id());
+        System.out.println("회원성함 : " + vo.getMname());
+        System.out.println("이용 중인 상품 : " + vo.getPname());
+
+        if(vo.getPname().contains("PT")) System.out.println("남은 PT 횟수 : " + vo.getPtRemain());
+        System.out.println("만료일 : " + vo.getDue_Date());
+        System.out.println("성별 : " + vo.getGender());
+        System.out.println("전화번호 : " + vo.getPhoneNum());
+        if(vo.getLockNum() == null) System.out.println("라커 이용 안함");
+        else if(vo.getLockNum().equals("0"))System.out.println("라커 이용 안함");
+        else  System.out.println("라커번호 : " + vo.getLockNum());
+        System.out.println("등록일 : " + vo.getReg_Date());
+    }
 }
+
+

@@ -19,9 +19,12 @@ public class Product {
                 case 1:  List<ProductVO> list = pDAO.productSel();
                          pDAO.productView(list);
                          break;
-                case 2:
-                case 3:
-                case 4:
+                case 2: pDAO.productInsert();
+                        break;
+                case 3: pDAO.productUpdate();
+                        break;
+                case 4: pDAO.productDelete();
+                        break;
                 case 5:
                     System.out.println("상품 관리를 종료합니다.");
                     return;

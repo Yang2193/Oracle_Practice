@@ -4,14 +4,17 @@ import com.kh.gym.util.Common;
 import com.kh.gym.vo.ProductVO;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ProductDAO {
     Connection conn = null; // 자바와 오라클에 대한 연결 설정
     Statement stmt = null;  // SQL 문을 수행하기 위한 객체
+    PreparedStatement pStmt = null;
     ResultSet rs = null; // statement 동작에 대한 결과로 전달되는 DB의 내용
 
     public List<ProductVO> productSel(){
@@ -50,15 +53,81 @@ public class ProductDAO {
     }
 
     public void productInsert(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("===== 상품 추가 =====");
+        System.out.print("상품 이름 : ");
+        String pName = sc.nextLine();
+        System.out.print("가격 설정 : ");
+        int price = sc.nextInt();
+        System.out.print("기간 설정 : ");
+        int term = sc.nextInt();
 
+        String sql = "INSERT INTO PRODUCT VALUES(?,?,?)";
+
+        try{
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, pName);
+            pStmt.setInt(2, price);
+            pStmt.setInt(3, term);
+            pStmt.executeUpdate();
+            System.out.print("상품 추가 완료");
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
     }
 
     public void productUpdate(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("수정할 상품명을 입력하세요 : ");
+        String pName = sc.nextLine();
+        System.out.print("상품명 수정 : ");
+        String newPName = sc.nextLine();
+        System.out.print("가격 수정 : ");
+        int price = sc.nextInt();
+        System.out.print("기간 수정 : ");
+        int term = sc.nextInt();
+
+        String sql = "UPDATE PRODUCT SET PNAME = ?, PRICE = ?, TERM = ? WHERE PNAME = ?";
+
+        try{
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, newPName);
+            pStmt.setInt(2, price);
+            pStmt.setInt(3, term);
+            pStmt.setString(4, pName);
+            pStmt.executeUpdate();
+            System.out.println("상품 수정 완료");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
 
     }
 
     public void productDelete(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("삭제할 상품명을 입력하세요. :  ");
+        String pName = sc.nextLine();
 
+        String sql = "DELETE FROM PRODUCT WHERE PNAME = ?";
+
+        try{
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, pName);
+            pStmt.executeUpdate();
+            System.out.println("삭제 완료");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
     }
 
 }

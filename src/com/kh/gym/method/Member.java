@@ -21,8 +21,9 @@ public class Member {
                     mIDao.M_InfoView(list);
                     break;
                 case 2:
-                    List<MemberInfoVO> list1 = mIDao.M_SelectSomeone();
-                    mIDao.M_SomeoneView(list1);
+                    mIDao.selSomeoneInfo(mIDao.selSomeone());
+//                    List<MemberInfoVO> list1 = mIDao.M_SelectSomeone();
+//                    mIDao.M_SomeoneView(list1);
                     break;
                 case 3: mIDao.M_InfoInsert();
                         break;

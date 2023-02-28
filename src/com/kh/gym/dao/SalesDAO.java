@@ -3,10 +3,7 @@ package com.kh.gym.dao;
 import com.kh.gym.util.Common;
 import com.kh.gym.vo.SalesVO;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
