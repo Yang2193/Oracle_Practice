@@ -165,7 +165,6 @@ public class EntranceDAO {
             pStmt = conn.prepareStatement(sql);
             pStmt.setInt(1, num);
             pStmt.executeUpdate();
-            System.out.println("입장 완료");
         } catch(Exception e){
             System.out.println("등록되지 않은 회원번호입니다.");
         }
@@ -175,7 +174,8 @@ public class EntranceDAO {
     public List<MemberEntranceVO> enterMember(String m){
         List<MemberEntranceVO> list = new ArrayList<>();
         int num = Integer.parseInt(m);
-        String sql = "SELECT MEM_ID, MNAME, PNAME, DUE_DATE FROM MEMBERINFO WHERE MEM_ID = ?";
+        String sql = "SELECT MEM_ID, MNAME, PNAME, DUE_DATE FROM MEMBERINFO WHERE MEM_ID = ?" +
+                "AND WHERE SYSDATE - DUE_DATE <= 0";
 
         try{
             conn = Common.getConnection();
@@ -196,14 +196,15 @@ public class EntranceDAO {
                 vo.setDate(date);
 
                 list.add(vo);
+                entranceInsert(m);
+                System.out.println("입장 완료");
 
             }
             Common.close(rs);
             Common.close(pStmt);
             Common.close(conn);
         }catch(Exception e){
-            e.printStackTrace();
-            System.out.println("등록되지 않은 회원번호입니다.");
+            System.out.println("등록되지 않은 회원번호거나 기간이 만료되었습니다.");
         }
         return list;
     }

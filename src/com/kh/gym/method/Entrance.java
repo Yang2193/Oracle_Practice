@@ -40,7 +40,6 @@ public class Entrance {
             System.out.print("회원 번호 : ");
             String num = sc.next();
             if(num.equalsIgnoreCase("x")) return;
-            eDao.entranceInsert(num);
             List<MemberEntranceVO> list = eDao.enterMember(num);
             eDao.enterMemberInfo(list);
 
