@@ -38,10 +38,9 @@ public class SalesDAO {
     }
 
     public void dailySalSelPrint(List<SalesVO> list) {
+        System.out.println("       날짜               매출        ");
         for (SalesVO e : list) {
-            System.out.println("일 : " + e.getP_DateStr());
-            System.out.println("매출 : " + e.getSales());
-            System.out.println("--------------------------------------");
+            System.out.println("   " + e.getP_DateStr() + "           " +e.getSales());
         }
     }
 
@@ -72,10 +71,9 @@ public class SalesDAO {
     }
 
     public void monthlySalSelPrint(List<SalesVO> list) {
+        System.out.println("       날짜               매출        ");
         for (SalesVO e : list) {
-            System.out.println("월 : " + e.getP_DateStr());
-            System.out.println("매출 : " + e.getSales());
-            System.out.println("--------------------------------------");
+            System.out.println("     " + e.getP_DateStr() + "            " +e.getSales());
         }
     }
 
@@ -105,10 +103,9 @@ public class SalesDAO {
     }
 
     public void annualSalSelPrint(List<SalesVO> list) {
+        System.out.println("      날짜               매출        ");
         for (SalesVO e : list) {
-            System.out.println("년 : " + e.getP_DateStr());
-            System.out.println("매출 : " + e.getSales());
-            System.out.println("--------------------------------------");
+            System.out.println("     " + e.getP_DateStr() + "              " +e.getSales());
         }
     }
 
@@ -162,6 +159,25 @@ public class SalesDAO {
                 + "SALES = " + sales + ","
                 + "P_DATE = " + "'" + pDate + "'"
                 + "WHERE ORDER_NO = " + order_no ;
+        try {
+            conn = Common.getConnection();
+            stmt = conn.createStatement();
+            int ret = stmt.executeUpdate(query);
+            if (ret == 0) {
+                System.out.println("존재하지 않는 주문번호 입니다.");
+            }else System.out.println("Return : " + ret);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(stmt);
+        Common.close(conn);
+    }
+
+    public void salesDelete() {
+        System.out.print("지울 주문번호를 입력 하세요 : ");
+        int order_no = sc.nextInt();
+
+        String query = "DELETE FROM SALES_STATEMENT WHERE ORDER_NO =" + order_no ;
         try {
             conn = Common.getConnection();
             stmt = conn.createStatement();
@@ -293,14 +309,10 @@ public class SalesDAO {
     }
 
     public void SalSelPrint(List<SalesVO> list) {
+        System.out.println("  주문번호     회원번호     회원이름     상품이름     매출           구매날짜");
         for (SalesVO e : list) {
-            System.out.println("주문번호 : " + e.getOrder_No());
-            System.out.println("회원번호 : " + e.getMem_ID());
-            System.out.println("회원이름 : " + e.getMName());
-            System.out.println("상품이름 : " + e.getPurchase());
-            System.out.println("매출 : " + e.getSales());
-            System.out.println("구매날짜 : " + e.getP_DateStr());
-            System.out.println("--------------------------------------");
+            System.out.println("   " + e.getOrder_No() + "       " + e.getMem_ID()  + "        " + e.getMName()+ "        "
+                    + e.getPurchase()+ "     "  + e.getSales() + "     " + e.getP_DateStr());
         }
     }
 }
