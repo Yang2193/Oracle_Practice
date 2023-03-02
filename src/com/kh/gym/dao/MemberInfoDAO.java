@@ -51,17 +51,19 @@ public class MemberInfoDAO {
     }
 
     public void M_InfoView(List<MemberInfoVO> list) {
+        System.out.println("회원번호  회원성함  이용 중인 상품  남은 PT횟수  만료일        성별        전화번호      라커번호      등록일");
+
         for (MemberInfoVO e : list) {
-            System.out.println("회원번호 : " + e.getMem_Id());
-            System.out.println("회원성함 : " + e.getMname());
-            System.out.println("이용 중인 상품 : " + e.getPname());
-            System.out.println("남은 PT횟수 : " + e.getPtRemain());
-            System.out.println("만료일 : " + e.getDue_Date());
-            System.out.println("성별 : " + e.getGender());
-            System.out.println("전화번호 : " + e.getPhoneNum());
-            System.out.println("라커번호 : " + e.getLockNum());
-            System.out.println("등록일 : " + e.getReg_Date());
-            System.out.println("===============");
+            System.out.print(" " + e.getMem_Id());
+            System.out.print("    " + e.getMname());
+            System.out.print("      " + e.getPname());
+            System.out.print("        " + e.getPtRemain());
+            System.out.print("      " + e.getDue_Date());
+            System.out.print("    " + e.getGender());
+            System.out.print("    " + e.getPhoneNum());
+            System.out.print("    " + e.getLockNum());
+            System.out.print("    " + e.getReg_Date());
+            System.out.println();
         }
     }
 
@@ -325,6 +327,7 @@ public class MemberInfoDAO {
             Common.close(pStmt);
             Common.close(conn);
         }catch (Exception e){
+            System.out.println("존재하지 않는 회원번호입니다.");
             e.printStackTrace();
         }
         return vo;
