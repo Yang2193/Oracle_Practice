@@ -166,8 +166,9 @@ public class SalesDAO {
             conn = Common.getConnection();
             stmt = conn.createStatement();
             int ret = stmt.executeUpdate(query);
-            System.out.println("Return : " + ret);
-
+            if (ret == 0) {
+                throw new SQLException("존재하지 않는 주문번호 입니다.");
+            }else System.out.println("Return : " + ret);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -181,12 +182,13 @@ public class SalesDAO {
             conn = Common.getConnection();
             System.out.print("원하는 날을 입력 하세요 : ");
             String wtDate = sc.nextLine();
-
             String sql = "SELECT * FROM SALES_STATEMENT WHERE TO_CHAR(P_DATE,'YYYY/MM/DD') = ? ORDER BY P_DATE";
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1,wtDate);
             rs = pStmt.executeQuery();
-            while (rs.next()) {
+            if (!rs.next()){
+                System.out.println("매출이 존재하지 않습니다.");
+            } else while (rs.next()) {
                 int no = rs.getInt("ORDER_NO");
                 int id = rs.getInt("MEM_ID");
                 String name = rs.getString("MNAME");
@@ -223,7 +225,9 @@ public class SalesDAO {
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1,wtDate);
             rs = pStmt.executeQuery();
-            while (rs.next()) {
+            if (!rs.next()){
+                System.out.println("매출이 존재하지 않습니다.");
+            } else while (rs.next()) {
                 int no = rs.getInt("ORDER_NO");
                 int id = rs.getInt("MEM_ID");
                 String name = rs.getString("MNAME");
@@ -260,7 +264,9 @@ public class SalesDAO {
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1,wtDate);
             rs = pStmt.executeQuery();
-            while (rs.next()) {
+            if (!rs.next()){
+                System.out.println("매출이 존재하지 않습니다.");
+            } else while (rs.next()) {
                 int no = rs.getInt("ORDER_NO");
                 int id = rs.getInt("MEM_ID");
                 String name = rs.getString("MNAME");
