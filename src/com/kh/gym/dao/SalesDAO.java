@@ -198,11 +198,11 @@ public class SalesDAO {
             conn = Common.getConnection();
             System.out.print("원하는 날을 입력 하세요 : ");
             String wtDate = sc.nextLine();
-            String sql = "SELECT * FROM SALES_STATEMENT WHERE TO_CHAR(P_DATE,'YYYY/MM/DD') = ? ORDER BY ORDER_NO)";
+            String sql = "SELECT * FROM SALES_STATEMENT WHERE TO_CHAR(P_DATE,'YYYY/MM/DD') = ? ORDER BY ORDER_NO";
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1,wtDate);
             rs = pStmt.executeQuery();
-         while (rs.next()) {
+            while (rs.next()) {
                 int no = rs.getInt("ORDER_NO");
                 int id = rs.getInt("MEM_ID");
                 String name = rs.getString("MNAME");
@@ -223,6 +223,7 @@ public class SalesDAO {
             Common.close(pStmt);
             Common.close(conn);
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("매출이 존재하지 않습니다.");
         }
         return list;
