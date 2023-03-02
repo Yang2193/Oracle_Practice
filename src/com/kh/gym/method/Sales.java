@@ -12,8 +12,7 @@ public class Sales {
 
     public void sales() {
         while (true) {
-            System.out.println("================== [Sales Table Command] ==================");
-            System.out.println("                     메뉴를 선택 하세요");
+            System.out.println("===== 매출관리 =====");
             System.out.print("[1] 매출 조회, [2] 매출 등록, [3] 매출 수정, [4] 종료 : ");
             int sel = sc.nextInt();
 
