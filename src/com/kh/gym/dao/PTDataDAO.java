@@ -20,7 +20,7 @@ public class PTDataDAO {
         try {
             conn = Common.getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT PT.MEM_ID, M.MNAME, T.TRAINER_NAME, PT.PT_DATE, PT.PT_REMAIN ");
+            sql.append("SELECT PT.MEM_ID, M.MNAME, T.TRAINER_NAME, TO_CHAR( PT.PT_DATE, 'YYYY-MM-DD') AS PT_DATE, PT.PT_REMAIN ");
             sql.append("FROM PT_DATA PT, MEMBERINFO M, TRAINERS T ");
             sql.append("WHERE PT.MEM_ID = M.MEM_ID AND T.TRAINER_ID = PT.TRAINER_ID");
             pstmt = conn.prepareStatement(sql.toString());
@@ -36,7 +36,7 @@ public class PTDataDAO {
         try {
             conn = Common.getConnection();
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT PT.MEM_ID, M.MNAME, T.TRAINER_NAME, PT.PT_DATE, PT.PT_REMAIN ");
+            sql.append("SELECT PT.MEM_ID, M.MNAME, T.TRAINER_NAME, TO_CHAR( PT.PT_DATE, 'YYYY-MM-DD') AS PT_DATE, PT.PT_REMAIN ");
             sql.append("FROM PT_DATA PT, MEMBERINFO M, TRAINERS T ");
             sql.append("WHERE PT.MEM_ID = M.MEM_ID AND T.TRAINER_ID = PT.TRAINER_ID AND PT.MEM_ID = ?");
             pstmt = conn.prepareStatement(sql.toString());

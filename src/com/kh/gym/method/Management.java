@@ -9,6 +9,7 @@ public class Management {
     Product product = new Product();
     Sales sales = new Sales();
     Pt pt = new Pt();
+    PTData ptData = new PTData();
     Locker locker = new Locker();
     Entrance entrance = new Entrance();
 
@@ -36,7 +37,7 @@ public class Management {
                     product.product();
                     break;
                 case 6:
-                    pt.ptManagement();
+                    ptData.PTDataManagement();
                     break;
                 case 7:
                     System.out.println("관리자 모드를 종료합니다.");
