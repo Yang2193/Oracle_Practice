@@ -167,7 +167,7 @@ public class SalesDAO {
             stmt = conn.createStatement();
             int ret = stmt.executeUpdate(query);
             if (ret == 0) {
-                throw new SQLException("존재하지 않는 주문번호 입니다.");
+                System.out.println("존재하지 않는 주문번호 입니다.");
             }else System.out.println("Return : " + ret);
         } catch (Exception e) {
             e.printStackTrace();
