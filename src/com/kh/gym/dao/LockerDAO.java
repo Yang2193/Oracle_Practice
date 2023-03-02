@@ -147,13 +147,18 @@ public class LockerDAO {
     }
 
     public void specificLocker(List<LockerVO> list){
+        try {
         System.out.println("라커번호         만료일         회원번호         회원성함");
-        for(LockerVO e : list){
-            System.out.print("  " + e.getLockNum());
-            System.out.print("         " + e.getdDate());
-            System.out.print("         " +e.getId());
-            System.out.print("         " + e.getName());
-            System.out.println();
+
+            for (LockerVO e : list) {
+                System.out.print("  " + e.getLockNum());
+                System.out.print("         " + e.getdDate());
+                System.out.print("         " + e.getId());
+                System.out.print("         " + e.getName());
+                System.out.println();
+            }
+        }catch(Exception e){
+            System.out.println("존재하지 않는 라커번호거나 잘못된 값을 입력하셨습니다.");
         }
     }
 
@@ -163,7 +168,6 @@ public class LockerDAO {
         String num = sc.next();
         updateMILocker(num);
         updateLocker(num);
-        System.out.println("등록/수정 완료");
     }
 
     public void updateLocker(String num){
@@ -178,11 +182,13 @@ public class LockerDAO {
             pStmt = conn.prepareStatement(sql);
             pStmt.setInt(1, term);
             pStmt.setString(2, num);
-            pStmt.executeUpdate();
+            int ret = pStmt.executeUpdate();
+            if(ret == 0) System.out.println("그 라커번호는 존재하지 않습니다.");
+            else System.out.println("등록/수정 완료");
 
-        }catch(Exception e){
+        }catch(SQLException e){
             System.out.println("그 라커번호는 존재하지 않습니다.");
-            e.printStackTrace();
+
         }
         Common.close(pStmt);
         Common.close(conn);
@@ -201,9 +207,8 @@ public class LockerDAO {
             pStmt.setString(1, num);
             pStmt.setInt(2, id);
             pStmt.executeUpdate();
-        }catch(Exception e){
-            System.out.println("그 라커번호는 존재하지 않습니다.");
-            e.printStackTrace();
+        }catch(SQLException e){
+            System.out.print("");
         }
         Common.close(pStmt);
         Common.close(conn);
@@ -216,7 +221,6 @@ public class LockerDAO {
         String num = sc.next();
         initMILocker(num);
         initLocker(num);
-        System.out.println("라커 초기화 완료.");
     }
 
     public void initLocker(String num){ // 다음엔 걍 라커테이블에 mem_id 넣고 회원정보에 라커테이블의 번호를 붙이는게 낫겠음
@@ -226,7 +230,10 @@ public class LockerDAO {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, num);
-            pStmt.executeUpdate();
+            int ret = pStmt.executeUpdate();
+            if(ret == 0) System.out.println("그 라커번호는 존재하지 않습니다.");
+            else System.out.println("라커 초기화 완료.");
+
         } catch(Exception e){
             e.printStackTrace();
         }
