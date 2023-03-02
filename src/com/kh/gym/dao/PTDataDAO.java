@@ -14,7 +14,6 @@ public class PTDataDAO {
     Statement stmt = null;
     PreparedStatement pstmt = null;
     ResultSet rSet = null;
-
     public List<PTDataVO> getPTInfoList() {
         List<PTDataVO> list = new ArrayList<>();
         try {

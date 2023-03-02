@@ -11,7 +11,7 @@ public class PTData {
     Scanner sc = new Scanner(System.in);
     PTDataDAO dao = new PTDataDAO();
     public void PTDataManagement() {
-        System.out.println("[1]전체조회, [2]회원번호조회 [3]PT 기록");
+        System.out.println("[1]PT 회원 목록, [2]특정 회원 조회, [3] PT 기록 확인, [4] PT 기록 입력, [5] PT 기록 삭제, [6] 종료");
         System.out.print("메뉴를 선택하세요 : ");
 
         int sel = sc.nextInt();
