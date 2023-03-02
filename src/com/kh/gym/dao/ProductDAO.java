@@ -3,11 +3,9 @@ package com.kh.gym.dao;
 import com.kh.gym.util.Common;
 import com.kh.gym.vo.ProductVO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -44,23 +42,26 @@ public class ProductDAO {
     }
 
     public void productView(List<ProductVO> list){
+        System.out.println("상품명       가격      기간");
         for(ProductVO e : list){
-            System.out.println("상품명 : " + e.getpName());
-            System.out.println("가격 : " + e.getPrice());
-            System.out.println("기간 : " + e.getTerm());
-            System.out.println("=============");
+            System.out.print(" " + e.getpName());
+            if(e.getpName().length() > 3) System.out.print("   " + e.getPrice());
+            else System.out.print("         " + e.getPrice());
+            System.out.print("   " + e.getTerm());
+            System.out.println();
         }
     }
 
     public void productInsert(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("===== 상품 추가 =====");
-        System.out.print("상품 이름 : ");
-        String pName = sc.nextLine();
-        System.out.print("가격 설정 : ");
-        int price = sc.nextInt();
-        System.out.print("기간 설정 : ");
-        int term = sc.nextInt();
+        try {
+            System.out.println("===== 상품 추가 =====");
+            System.out.print("상품 이름 : ");
+            String pName = sc.nextLine();
+            System.out.print("가격 설정 : ");
+            int price = sc.nextInt();
+            System.out.print("기간 설정 : ");
+            int term = sc.nextInt();
 
         String sql = "INSERT INTO PRODUCT VALUES(?,?,?)";
 
@@ -70,14 +71,20 @@ public class ProductDAO {
             pStmt.setString(1, pName);
             pStmt.setInt(2, price);
             pStmt.setInt(3, term);
-            pStmt.executeUpdate();
-            System.out.print("상품 추가 완료");
+            int ret = pStmt.executeUpdate();
+            if(ret == 0) System.out.println("잘못 된 정보를 입력하셨습니다.");
+            else System.out.print("상품 추가 완료");
 
-        } catch(Exception e){
-            e.printStackTrace();
+        } catch(SQLException e){
+            System.out.println("잘못 된 정보를 입력하셨습니다.");
+
         }
         Common.close(pStmt);
         Common.close(conn);
+
+        } catch(InputMismatchException e){
+            System.out.println("잘못된 값을 입력하셨습니다.");
+        }
     }
 
     public void productUpdate(){
@@ -100,10 +107,11 @@ public class ProductDAO {
             pStmt.setInt(2, price);
             pStmt.setInt(3, term);
             pStmt.setString(4, pName);
-            pStmt.executeUpdate();
-            System.out.println("상품 수정 완료");
+            int ret = pStmt.executeUpdate();
+            if(ret == 0) System.out.println("존재하지 않는 상품이거나 값을 잘못 입력하셨습니다.");
+            else System.out.println("상품 수정 완료");
         }catch(Exception e){
-            e.printStackTrace();
+            System.out.println("존재하지 않는 상품이거나 값을 잘못 입력하셨습니다.");
         }
         Common.close(pStmt);
         Common.close(conn);
@@ -121,9 +129,11 @@ public class ProductDAO {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, pName);
-            pStmt.executeUpdate();
-            System.out.println("삭제 완료");
+            int ret = pStmt.executeUpdate();
+            if(ret == 0) System.out.println("존재하지 않는 상품이거나 값을 잘못 입력하셨습니다.");
+            else System.out.println("삭제 완료");
         }catch(Exception e){
+            System.out.println("존재하지 않는 상품이거나 값을 잘못 입력하셨습니다.");
             e.printStackTrace();
         }
         Common.close(pStmt);

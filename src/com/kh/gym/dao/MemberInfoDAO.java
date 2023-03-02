@@ -4,11 +4,9 @@ import com.kh.gym.util.Common;
 import com.kh.gym.vo.MemberInfoVO;
 
 import java.sql.*;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class MemberInfoDAO {
 
@@ -171,7 +169,7 @@ public class MemberInfoDAO {
         try {
             conn = Common.getConnection();
           //  stmt = conn.createStatement();
-          //    int ret = stmt.executeUpdate(sql);
+
             pStmt = conn.prepareStatement(sql);
             pStmt.setInt(1, mem_Id);
             pStmt.setString(2, name);
@@ -182,10 +180,12 @@ public class MemberInfoDAO {
             pStmt.setString(7, pNum);
             pStmt.setString(8, lockNum);
             pStmt.setString(9, rDate);
-            pStmt.executeUpdate();
+            int ret = pStmt.executeUpdate();
            // System.out.println("Return : " + ret);
+            if(ret == 0 ) System.out.println("중복된 회원번호거나 값을 잘못 입력하셨습니다.");
+
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("중복된 회원번호거나 값을 잘못 입력하셨습니다.");
         }
         Common.close(pStmt);
         Common.close(conn);
@@ -205,7 +205,7 @@ public class MemberInfoDAO {
             int mem_Id = sc.nextInt();
             while(true) {
                 System.out.println("어떤 회원 정보를 수정하시겠습니까?");
-                System.out.print("[1]성함, [2]이용 중인 상품, [3]남은 PT횟수, [4] 만료일, [5] 성별, [6] 전화번호, [7] 라커, [8] 마침");
+                System.out.println("[1]성함, [2]이용 중인 상품, [3]남은 PT횟수, [4] 만료일, [5] 성별, [6] 전화번호, [7] 라커, [8] 마침");
                 int sel = sc.nextInt();
                 String sql = null;
                 switch (sel) {
@@ -267,8 +267,8 @@ public class MemberInfoDAO {
                     conn = Common.getConnection();
                     stmt = conn.createStatement();
                     int ret = stmt.executeUpdate(sql);
-                    System.out.println("Return : " + ret);
-                    System.out.println("수정 완료");
+                    if(ret == 0) System.out.println("등록되지 않았거나 잘못된 정보를 입력하였습니다.");
+                    else System.out.println("수정 완료");
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -281,70 +281,84 @@ public class MemberInfoDAO {
 
     public void m_InfoDelete(){
         Scanner sc = new Scanner(System.in);
-        System.out.print("삭제하실 회원의 회원번호를 입력해주세요. : ");
-        int mem_Id = sc.nextInt();
-        String sql = "DELETE FROM MEMBERINFO WHERE MEM_ID = " + mem_Id;
         try {
-            conn = Common.getConnection();
-            stmt = conn.createStatement();
-            int ret = stmt.executeUpdate(sql);
-            System.out.println("Return : " + ret);
-            System.out.println("삭제 완료");
-        }catch(Exception e){
-            e.printStackTrace();
+            System.out.print("삭제하실 회원의 회원번호를 입력해주세요. : ");
+            int mem_Id = sc.nextInt();
+            String sql = "DELETE FROM MEMBERINFO WHERE MEM_ID = " + mem_Id;
+            try {
+                conn = Common.getConnection();
+                stmt = conn.createStatement();
+                int ret = stmt.executeUpdate(sql);
+                if (ret == 0) System.out.println("등록되지 않은 회원번호입니다.");
+                else System.out.println("삭제 완료");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Common.close(stmt);
+            Common.close(conn);
+        }catch(InputMismatchException e){
+            System.out.println("잘못된 값을 입력하셨습니다.");
         }
-        Common.close(stmt);
-        Common.close(conn);
     }
 
     // 특정회원조회
     public MemberInfoVO selSomeone(){
         Scanner sc = new Scanner(System.in);
         MemberInfoVO vo = null;
-        System.out.print("조회하실 회원의 회원번호를 입력하세요. : ");
-        int num = sc.nextInt();
-        String sql = "SELECT * FROM MEMBERINFO WHERE MEM_ID = ?";
 
         try {
-            conn = Common.getConnection();
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setInt(1, num);
-            rs = pStmt.executeQuery();
-            while(rs.next()){
-                int id = rs.getInt("MEM_ID");
-                String mName = rs.getString("MNAME");
-                String pName = rs.getString("PNAME");
-                int ptRemain = rs.getInt("PT_REMAIN");
-                Date dDate = rs.getDate("DUE_DATE");
-                String gender = rs.getString("GENDER");
-                String pNum = rs.getString("PHONE_NUM");
-                String lNum = rs.getString("LOCKER");
-                Date rDate = rs.getDate("REG_DATE");
-                vo = new MemberInfoVO(id, mName,pName,ptRemain,dDate,gender,pNum,lNum,rDate);
-            }
+            System.out.print("조회하실 회원의 회원번호를 입력하세요. : ");
+            int num = sc.nextInt();
+            String sql = "SELECT * FROM MEMBERINFO WHERE MEM_ID = ?";
 
-            Common.close(rs);
-            Common.close(pStmt);
-            Common.close(conn);
-        }catch (Exception e){
-            System.out.println("존재하지 않는 회원번호입니다.");
-            e.printStackTrace();
+            try {
+                conn = Common.getConnection();
+                pStmt = conn.prepareStatement(sql);
+                pStmt.setInt(1, num);
+                rs = pStmt.executeQuery();
+                while (rs.next()) {
+                    int id = rs.getInt("MEM_ID");
+                    String mName = rs.getString("MNAME");
+                    String pName = rs.getString("PNAME");
+                    int ptRemain = rs.getInt("PT_REMAIN");
+                    Date dDate = rs.getDate("DUE_DATE");
+                    String gender = rs.getString("GENDER");
+                    String pNum = rs.getString("PHONE_NUM");
+                    String lNum = rs.getString("LOCKER");
+                    Date rDate = rs.getDate("REG_DATE");
+                    vo = new MemberInfoVO(id, mName, pName, ptRemain, dDate, gender, pNum, lNum, rDate);
+                }
+
+                Common.close(rs);
+                Common.close(pStmt);
+                Common.close(conn);
+            } catch (Exception e) {
+                System.out.println("존재하지 않는 회원번호입니다.");
+                e.printStackTrace();
+            }
+        }catch(InputMismatchException e){
+            System.out.println("잘못된 값을 입력하셨습니다.");
         }
         return vo;
     }
     public void selSomeoneInfo(MemberInfoVO vo){
+    try {
         System.out.println("회원번호 : " + vo.getMem_Id());
         System.out.println("회원성함 : " + vo.getMname());
         System.out.println("이용 중인 상품 : " + vo.getPname());
 
-        if(vo.getPname().contains("PT")) System.out.println("남은 PT 횟수 : " + vo.getPtRemain());
+        if (vo.getPname().contains("PT")) System.out.println("남은 PT 횟수 : " + vo.getPtRemain());
         System.out.println("만료일 : " + vo.getDue_Date());
         System.out.println("성별 : " + vo.getGender());
         System.out.println("전화번호 : " + vo.getPhoneNum());
-        if(vo.getLockNum() == null) System.out.println("라커 이용 안함");
-        else if(vo.getLockNum().equals("0"))System.out.println("라커 이용 안함");
-        else  System.out.println("라커번호 : " + vo.getLockNum());
+        if (vo.getLockNum() == null) System.out.println("라커 이용 안함");
+        else if (vo.getLockNum().equals("0")) System.out.println("라커 이용 안함");
+        else System.out.println("라커번호 : " + vo.getLockNum());
         System.out.println("등록일 : " + vo.getReg_Date());
+    }catch(Exception e){
+        System.out.println("존재하지 않는 회원번호입니다.");
+    }
     }
 
     public List<MemberInfoVO> expiredDateList(){
