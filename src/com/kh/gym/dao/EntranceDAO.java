@@ -164,46 +164,52 @@ public class EntranceDAO {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setInt(1, num);
-            pStmt.executeUpdate();
+            int ret = pStmt.executeUpdate();
         } catch(Exception e){
-            System.out.println("등록되지 않은 회원번호입니다.");
-        }
+
+            }
         Common.close(pStmt);
         Common.close(conn);
     }
     public List<MemberEntranceVO> enterMember(String m){
         List<MemberEntranceVO> list = new ArrayList<>();
         int num = Integer.parseInt(m);
-        String sql = "SELECT MEM_ID, MNAME, PNAME, DUE_DATE FROM MEMBERINFO WHERE MEM_ID = ?" +
-                "AND WHERE SYSDATE - DUE_DATE <= 0";
+        String sql = "SELECT MEM_ID, MNAME, PNAME, DUE_DATE FROM MEMBERINFO WHERE MEM_ID = ?"
+                +"AND DUE_DATE - SYSDATE > 0";
 
         try{
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setInt(1, num);
-            pStmt.executeUpdate();
-            rs = pStmt.executeQuery();
-            while(rs.next()){
-                int id = rs.getInt("MEM_ID");
-                String name = rs.getString("MNAME");
-                String pName = rs.getString("PNAME");
-                Date date = rs.getDate("DUE_DATE");
-
-                MemberEntranceVO vo = new MemberEntranceVO();
-                vo.setId(id);
-                vo.setName(name);
-                vo.setpName(pName);
-                vo.setDate(date);
-
-                list.add(vo);
+            int ret = pStmt.executeUpdate();
+            if(ret == 0)  {System.out.println("등록되지 않은 회원번호거나 기간이 만료된 회원입니다.");
+            rs = pStmt.executeQuery();}
+            else {
                 entranceInsert(m);
-                System.out.println("입장 완료");
+                while (rs.next()) {
+                    int id = rs.getInt("MEM_ID");
+                    String name = rs.getString("MNAME");
+                    String pName = rs.getString("PNAME");
+                    Date date = rs.getDate("DUE_DATE");
 
+                    MemberEntranceVO vo = new MemberEntranceVO();
+                    vo.setId(id);
+                    vo.setName(name);
+                    vo.setpName(pName);
+                    vo.setDate(date);
+
+                    list.add(vo);
+
+
+                    System.out.println("입장 완료");
+
+                }
             }
             Common.close(rs);
             Common.close(pStmt);
             Common.close(conn);
         }catch(Exception e){
+            e.printStackTrace();
             System.out.println("등록되지 않은 회원번호거나 기간이 만료되었습니다.");
         }
         return list;
